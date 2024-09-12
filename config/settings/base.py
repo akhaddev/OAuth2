@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'oauth2_provider',
@@ -76,8 +77,32 @@ SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
+    },
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+        ],
+        'AUTH_PARAMS': {
+            'auth_type': 'rerequest'
+        },
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'en_US',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v12.0', 
     }
 }
+
 
 
 INSTALLED_APPS = THIRD_PARTY_APPS + LOCAL_APPS + DJANGO_APPS
@@ -91,9 +116,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-
-    # 'allauth.account.middleware.AccountMiddleware',
-
 ]
 
 
@@ -120,15 +142,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-    #     'dj_rest_auth.authentication.JWTAuthentication',
-    # ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-    #    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
        'rest_framework_simplejwt.authentication.JWTAuthentication',
        'rest_framework.authentication.BasicAuthentication',
        'rest_framework.authentication.SessionAuthentication',
@@ -146,6 +163,8 @@ JWT_AUTH = {
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '63440449551-iu5d9gn8kh78vceihls15gr1bv3t8vik.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
+# 1227779898270491
+# 'f4fb592cd5d26771d03b50a661ef1c51'
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=15),
@@ -259,3 +278,5 @@ ELASTICSEARCH_DSL = {
     },
 }
 
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
