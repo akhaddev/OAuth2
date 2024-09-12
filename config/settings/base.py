@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 from datetime import timedelta
 
+
+import django
+from django.utils.encoding import force_str
+django.utils.encoding.force_text = force_str
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -46,7 +51,16 @@ THIRD_PARTY_APPS = [
     "rest_framework_swagger",
     'debug_toolbar',
     "django_elasticsearch_dsl",
-    "django_elasticsearch_dsl_drf",
+    "django_elasticsearch_dsl_drf", 
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'oauth2_provider',
+    'social_django',
 ]
 
 LOCAL_APPS = [
@@ -55,6 +69,16 @@ LOCAL_APPS = [
     "main.apps.product.apps.ProductConfig",
     "main.apps.category.apps.CategoryConfig",
 ]
+
+SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}
+
 
 INSTALLED_APPS = THIRD_PARTY_APPS + LOCAL_APPS + DJANGO_APPS
 
@@ -67,6 +91,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    # 'allauth.account.middleware.AccountMiddleware',
 
 ]
 
@@ -94,7 +120,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 REST_FRAMEWORK = {
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    #     'dj_rest_auth.authentication.JWTAuthentication',
+    # ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
+    #    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
        'rest_framework_simplejwt.authentication.JWTAuthentication',
        'rest_framework.authentication.BasicAuthentication',
        'rest_framework.authentication.SessionAuthentication',
@@ -102,8 +136,15 @@ REST_FRAMEWORK = {
     # "DEFAULT_PAGINATION_CLASS": "main.apps.common.pagination.PageNumberPagination",
     # "PAGE_SIZE": 12,
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
-
 }
+
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'dj_rest_auth.utils.jwt_response_payload_handler',
+    'JWT_EXPIRATION_DELTA': timedelta(days=7),
+}
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '63440449551-iu5d9gn8kh78vceihls15gr1bv3t8vik.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 
 SIMPLE_JWT = {
@@ -217,3 +258,4 @@ ELASTICSEARCH_DSL = {
         'hosts': 'elasticsearch:9200'
     },
 }
+

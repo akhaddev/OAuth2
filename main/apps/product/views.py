@@ -51,3 +51,12 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 product_retrieve_update_delete_api_view = ProductDetailView.as_view()
 
+
+from rest_framework.permissions import IsAuthenticated
+
+
+class ProtectedAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({"message": "This is a protected resource"})

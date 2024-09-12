@@ -27,6 +27,12 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path("", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui-v1"),
     path('__debug__', include(debug_toolbar.urls)),
+
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('accounts/', include('allauth.urls')), 
 ]
 
 if settings.DEBUG:

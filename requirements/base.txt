@@ -16,4 +16,7 @@ six==1.16.0
 psycopg2-binary==2.9.2   
 django-debug-toolbar==3.8.1
 PyYAML==6.0.1
-
+django-oauth-toolkit
+social-auth-app-django
+django-allauth==0.52.0
+dj-rest-auth==2.1.6

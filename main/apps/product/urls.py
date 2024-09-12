@@ -17,7 +17,9 @@ urlpatterns = [
         "<uuid:guid>/", 
         views.product_retrieve_update_delete_api_view, 
         name="product_detail_update_delete"
-    )
+    ),
+
+    path('protected/', views.ProtectedAPIView.as_view(), name='protected'),
 ]
 
 
